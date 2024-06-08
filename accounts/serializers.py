@@ -5,6 +5,7 @@ from django.contrib.auth import (
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -64,3 +65,16 @@ class AuthTokenSerializer(serializers.Serializer):
                 'email': user.email,
             }
         }
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims to the token payload
+        token['username'] = user.username
+        token['boom'] = 'boom'
+        # Add any other custom claims here
+
+        return token

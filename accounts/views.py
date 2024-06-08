@@ -1,9 +1,9 @@
 from rest_framework import generics
-from accounts.serializers import UserSerializer, AuthTokenSerializer
+from accounts.serializers import UserSerializer, AuthTokenSerializer, CustomTokenObtainPairSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.settings import api_settings
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -19,3 +19,7 @@ class CreateTokenView(ObtainAuthToken):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
